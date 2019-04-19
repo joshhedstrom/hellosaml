@@ -19,7 +19,7 @@
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.report.outputEncoding>UTF-8</project.report.outputEncoding>
-		<start-class>com.hedstrom.spring.boot.security.saml.web.Application</start-class>
+		<start-class>com.hedstrom.hellosaml.Application</start-class>
 	</properties>
 
 	<dependencies>
