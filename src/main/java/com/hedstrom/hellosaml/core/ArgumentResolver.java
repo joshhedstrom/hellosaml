@@ -1,3 +1,5 @@
+package com.hedstrom.hellosaml.core;
+
 import java.security.Principal;
 
 import org.springframework.core.MethodParameter;
