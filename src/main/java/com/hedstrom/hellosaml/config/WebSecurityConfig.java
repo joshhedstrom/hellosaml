@@ -113,7 +113,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
 
     // XML Parser Pool
     @Bean(initMethod = "initialize")
-    public StaticBasicParserPool ParserPool() {
+    public StaticBasicParserPool parserPool() {
         return new StaticBasicParserPool();
     }
 
@@ -263,7 +263,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
     @Bean
     @Qualifier("metadata")
     public CachingMetadataManager metadata() throws MetadataProviderException {
-        List<MetaDataProvider> providers = new ArrayList<MetaDataProvider>();
+        List<MetadataProvider> providers = new ArrayList<MetadataProvider>();
         providers.add(ssoCircleExtendedMetadataProvider());
         return new CachingMetadataManager(providers);
     }
@@ -274,7 +274,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
         MetadataGenerator metadataGenerator = new MetadataGenerator();
         metadataGenerator.setEntityId("com:hedstrom:hellosaml:sp");
         metadataGenerator.setExtendedMetadata(extendedMetadata());
-        metadataGenerator.setIncludeDiscoverExtension(false);
+        metadataGenerator.setIncludeDiscoveryExtension(false);
         metadataGenerator.setKeyManager(keyManager());
         return metadataGenerator;
     }
@@ -299,7 +299,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
     SimpleUrlAuthenticationFailureHandler authenticationFailureHandler() {
         SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
         failureHandler.setUseForward(true);
-        failureHandler.setDefaultFailedUrl("/error");
+        failureHandler.setDefaultFailureUrl("/error");
         return failureHandler;
     }
 
