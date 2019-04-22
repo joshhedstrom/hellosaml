@@ -20,7 +20,7 @@ public class CommonTestSupport {
 
     public static final String USER_NAME = "UserName";
 
-    public static final String USER_PASSWORD = "<abc123>";
+    public static final String USER_PASSWORD = "<testPassword>";
 
     public static final String USER_ROLE = "ROLE_USER";
 
