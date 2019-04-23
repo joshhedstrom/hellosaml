@@ -29,3 +29,6 @@ HELP.md
 .vscode/
 
 src/main/resources/saml/samlKeystore.jks
+
+file.log
+
