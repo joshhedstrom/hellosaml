@@ -14,6 +14,8 @@
 	<description>saml demo</description>
 	<properties>
 		<java.version>1.8</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.report.outputEncoding>UTF-8</project.report.outputEncoding>
 		<start-class>com.hedstrom.hellosaml.Application</start-class>
@@ -80,6 +82,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
 				<configuration>
+					<release>11</release>
 					<source>1.8</source>
 					<target>1.8</target>
 					<fork>true</fork>
