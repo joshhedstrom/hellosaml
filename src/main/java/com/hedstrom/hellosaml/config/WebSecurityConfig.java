@@ -1,5 +1,6 @@
 package com.hedstrom.hellosaml.config;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -87,6 +88,7 @@ import com.hedstrom.hellosaml.core.UserDetailsServiceImpl;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements InitializingBean, DisposableBean {
+
     private Timer backgroundTaskTimer;
     private MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager;
 
@@ -102,15 +104,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
     }
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    private UserDetailsServiceImpl samlUserDetailsServiceImpl;
 
-    // Init velocity engine
+    // Initialization of the velocity engine
     @Bean
     public VelocityEngine velocityEngine() {
         return VelocityFactory.getEngine();
     }
 
-    // XML Parser Pool
+    // XML parser pool needed for OpenSAML parsing
     @Bean(initMethod = "initialize")
     public StaticBasicParserPool parserPool() {
         return new StaticBasicParserPool();
@@ -121,17 +123,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
         return new ParserPoolHolder();
     }
 
-    // bindings, encoders and decoders
+    // Bindings, encoders and decoders used for creating and parsing messages
     @Bean
     public HttpClient httpClient() {
         return new HttpClient(this.multiThreadedHttpConnectionManager);
     }
 
-    // SAML auth provider responsible for validating received SAML messages
+    // SAML Authentication Provider responsible for validating of received SAML
+    // messages
     @Bean
     public SAMLAuthenticationProvider samlAuthenticationProvider() {
         SAMLAuthenticationProvider samlAuthenticationProvider = new SAMLAuthenticationProvider();
-        samlAuthenticationProvider.setUserDetails(userDetailsServiceImpl);
+        samlAuthenticationProvider.setUserDetails(samlUserDetailsServiceImpl);
         samlAuthenticationProvider.setForcePrincipalAsString(false);
         return samlAuthenticationProvider;
     }
@@ -142,15 +145,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
         return new SAMLContextProviderImpl();
     }
 
-    // Init of OpenSAML library
+    // Initialization of OpenSAML library
     @Bean
     public static SAMLBootstrap sAMLBootstrap() {
         return new SAMLBootstrap();
     }
 
-    // logger for SAML messages and events
+    // Logger for SAML messages and events
     @Bean
-    public static SAMLDefaultLogger samlLogger() {
+    public SAMLDefaultLogger samlLogger() {
         return new SAMLDefaultLogger();
     }
 
@@ -189,13 +192,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
         return new SingleLogoutProfileImpl();
     }
 
-    // central cryptographic key storage
+    // Central storage of cryptographic keys
     @Bean
     public KeyManager keyManager() {
         DefaultResourceLoader loader = new DefaultResourceLoader();
-        Resource storeFile = loader.getResource("classpath:/saml/samlKeystore.jks");
-        // TODO:-----PASSWORD FROM DEMO, CHANGE
-        // LATER--------------------------------------------------------->>>>>>>>>>>>>>>>>>
+        Resource storeFile = loader
+                .getResource("classpath:/saml/samlKeystore.jks");
         String storePass = "nalle123";
         Map<String, String> passwords = new HashMap<String, String>();
         passwords.put("apollo", "nalle123");
@@ -203,7 +205,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
         return new JKSKeyManager(storeFile, storePass, passwords, defaultKey);
     }
 
-    // setup TLS socket
+    // Setup TLS Socket Factory
     @Bean
     public TLSProtocolConfigurer tlsProtocolConfigurer() {
         return new TLSProtocolConfigurer();
@@ -216,8 +218,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
         return webSSOProfileOptions;
     }
 
-    // entry point to init authentication
-    // default vals from properties file
+    // Entry point to initialize authentication, default values taken from
+    // properties file
     @Bean
     public SAMLEntryPoint samlEntryPoint() {
         SAMLEntryPoint samlEntryPoint = new SAMLEntryPoint();
@@ -225,7 +227,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
         return samlEntryPoint;
     }
 
-    // init advanced metadata info
+    // Setup advanced info about metadata
     @Bean
     public ExtendedMetadata extendedMetadata() {
         ExtendedMetadata extendedMetadata = new ExtendedMetadata();
@@ -245,20 +247,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
 
     @Bean
     @Qualifier("idp-ssocircle")
-    public ExtendedMetadataDelegate ssoCircleExtendedMetadataProvider() throws MetadataProviderException {
+    public ExtendedMetadataDelegate ssoCircleExtendedMetadataProvider()
+            throws MetadataProviderException {
         String idpSSOCircleMetadataURL = "https://idp.ssocircle.com/idp-meta.xml";
-        HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(this.backgroundTaskTimer, httpClient(),
-                idpSSOCircleMetadataURL);
+        HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(
+                this.backgroundTaskTimer, httpClient(), idpSSOCircleMetadataURL);
         httpMetadataProvider.setParserPool(parserPool());
-        ExtendedMetadataDelegate extendedMetadataDelegate = new ExtendedMetadataDelegate(httpMetadataProvider,
-                extendedMetadata());
+        ExtendedMetadataDelegate extendedMetadataDelegate =
+                new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
         extendedMetadataDelegate.setMetadataTrustCheck(true);
         extendedMetadataDelegate.setMetadataRequireSignature(false);
         backgroundTaskTimer.purge();
         return extendedMetadataDelegate;
     }
 
-    // IDP Metadata config - paths to IDP metadata in circle of trust
+    // IDP Metadata configuration - paths to metadata of IDPs in circle of trust
+    // is here
+    // Do no forget to call iniitalize method on providers
     @Bean
     @Qualifier("metadata")
     public CachingMetadataManager metadata() throws MetadataProviderException {
@@ -267,36 +272,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
         return new CachingMetadataManager(providers);
     }
 
-    // Filter auto generates defaul SP metadata
+    // Filter automatically generates default SP metadata
     @Bean
     public MetadataGenerator metadataGenerator() {
         MetadataGenerator metadataGenerator = new MetadataGenerator();
-        metadataGenerator.setEntityId("com:hedstrom:hellosaml:sp");
+        metadataGenerator.setEntityId("com:hedstrom:spring:sp");
         metadataGenerator.setExtendedMetadata(extendedMetadata());
         metadataGenerator.setIncludeDiscoveryExtension(false);
         metadataGenerator.setKeyManager(keyManager());
         return metadataGenerator;
     }
 
-    // filter waiting for connections on URL suffixed with filterSuffix, presents SP
-    // metadata
+    // The filter is waiting for connections on URL suffixed with filterSuffix
+    // and presents SP metadata there
     @Bean
     public MetadataDisplayFilter metadataDisplayFilter() {
         return new MetadataDisplayFilter();
     }
 
-    // handler that redirects user after successful login
+    // Handler deciding where to redirect user after successful login
     @Bean
-    SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler() {
-        SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+    public SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler() {
+        SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler =
+                new SavedRequestAwareAuthenticationSuccessHandler();
         successRedirectHandler.setDefaultTargetUrl("/landing");
         return successRedirectHandler;
     }
 
-    // handler that redirects user if failed login
+    // Handler deciding where to redirect user after failed login
     @Bean
-    SimpleUrlAuthenticationFailureHandler authenticationFailureHandler() {
-        SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
+    public SimpleUrlAuthenticationFailureHandler authenticationFailureHandler() {
+        SimpleUrlAuthenticationFailureHandler failureHandler =
+                new SimpleUrlAuthenticationFailureHandler();
         failureHandler.setUseForward(true);
         failureHandler.setDefaultFailureUrl("/error");
         return failureHandler;
@@ -311,7 +318,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
         return samlWebSSOHoKProcessingFilter;
     }
 
-    // processing filter for WebSSO profile messages
+    // Processing filter for WebSSO profile messages
     @Bean
     public SAMLProcessingFilter samlWebSSOProcessingFilter() throws Exception {
         SAMLProcessingFilter samlWebSSOProcessingFilter = new SAMLProcessingFilter();
@@ -326,40 +333,46 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
         return new MetadataGeneratorFilter(metadataGenerator());
     }
 
-    // handler for sucessful logout
+    // Handler for successful logout
     @Bean
-    SimpleUrlLogoutSuccessHandler successLogoutHandler() {
+    public SimpleUrlLogoutSuccessHandler successLogoutHandler() {
         SimpleUrlLogoutSuccessHandler successLogoutHandler = new SimpleUrlLogoutSuccessHandler();
         successLogoutHandler.setDefaultTargetUrl("/");
         return successLogoutHandler;
     }
 
-    // logout handler for terminating local session
+    // Logout handler terminating local session
     @Bean
     public SecurityContextLogoutHandler logoutHandler() {
-        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+        SecurityContextLogoutHandler logoutHandler =
+                new SecurityContextLogoutHandler();
         logoutHandler.setInvalidateHttpSession(true);
         logoutHandler.setClearAuthentication(true);
         return logoutHandler;
     }
 
-    // filter processing incoming logout messages
-    // first arg determines redirection url after successful global logout
+    // Filter processing incoming logout messages
+    // First argument determines URL user will be redirected to after successful
+    // global logout
     @Bean
     public SAMLLogoutProcessingFilter samlLogoutProcessingFilter() {
-        return new SAMLLogoutProcessingFilter(successLogoutHandler(), logoutHandler());
+        return new SAMLLogoutProcessingFilter(successLogoutHandler(),
+                logoutHandler());
     }
 
     // Overrides default logout processing filter with the one processing SAML
     // messages
     @Bean
     public SAMLLogoutFilter samlLogoutFilter() {
-        return new SAMLLogoutFilter(successLogoutHandler(), new LogoutHandler[] { logoutHandler() },
+        return new SAMLLogoutFilter(successLogoutHandler(),
+                new LogoutHandler[] { logoutHandler() },
                 new LogoutHandler[] { logoutHandler() });
     }
 
+    // Bindings
     private ArtifactResolutionProfile artifactResolutionProfile() {
-        final ArtifactResolutionProfileImpl artifactResolutionProfile = new ArtifactResolutionProfileImpl(httpClient());
+        final ArtifactResolutionProfileImpl artifactResolutionProfile =
+                new ArtifactResolutionProfileImpl(httpClient());
         artifactResolutionProfile.setProcessor(new SAMLProcessorImpl(soapBinding()));
         return artifactResolutionProfile;
     }
@@ -394,7 +407,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
         return new HTTPPAOS11Binding(parserPool());
     }
 
-    //processor
+    // Processor
     @Bean
     public SAMLProcessorImpl processor() {
         Collection<SAMLBinding> bindings = new ArrayList<SAMLBinding>();
@@ -408,29 +421,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
 
     /**
      * Define the security filter chain in order to support SSO Auth by using SAML 2.0
-     * 
+     *
      * @return Filter chain proxy
      * @throws Exception
      */
     @Bean
     public FilterChainProxy samlFilter() throws Exception {
         List<SecurityFilterChain> chains = new ArrayList<SecurityFilterChain>();
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/login/**"), samlEntryPoint()));
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/logout/**"), samlLogoutFilter()));
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/metadata/**"), metadataDisplayFilter()));
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSO/**"), samlWebSSOProcessingFilter()));
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSOHoK/**"), samlWebSSOHoKProcessingFilter()));
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SingleLogout/**"), samlLogoutProcessingFilter()));
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/discovery/**"), samlIDPDiscovery()));
+        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/login/**"),
+                samlEntryPoint()));
+        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/logout/**"),
+                samlLogoutFilter()));
+        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/metadata/**"),
+                metadataDisplayFilter()));
+        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSO/**"),
+                samlWebSSOProcessingFilter()));
+        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSOHoK/**"),
+                samlWebSSOHoKProcessingFilter()));
+        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SingleLogout/**"),
+                samlLogoutProcessingFilter()));
+        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/discovery/**"),
+                samlIDPDiscovery()));
         return new FilterChainProxy(chains);
     }
 
     /**
-     * Returns the authentication manager currently used by Spring. It represents a
-     * bean definition with the aim allow wiring from other classes performing the
-     * Inversion of Control (IoC).
-     * 
-     * @throws Exception
+     * Returns the authentication manager currently used by Spring.
+     * It represents a bean definition with the aim allow wiring from
+     * other classes performing the Inversion of Control (IoC).
+     *
+     * @throws  Exception
      */
     @Bean
     @Override
@@ -440,32 +460,42 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements I
 
     /**
      * Defines the web based security configuration.
-     * 
-     * @param http It allows configuring web based security for specific http
-     *             requests.
-     * @throws Exception
+     *
+     * @param   http It allows configuring web based security for specific http requests.
+     * @throws  Exception
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().authenticationEntryPoint(samlEntryPoint());
-        http.addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
+        http
+                .httpBasic()
+                .authenticationEntryPoint(samlEntryPoint());
+        http
+                .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
                 .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(samlFilter(), CsrfFilter.class);
-        http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/saml/**").permitAll().antMatchers("/css/**")
-                .permitAll().antMatchers("/img/**").permitAll().antMatchers("/js/**").permitAll().anyRequest()
-                .authenticated();
-        http.logout().disable(); // The logout procedure is already handled by SAML filters.
+        http
+                .authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/saml/**").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/img/**").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .anyRequest().authenticated();
+        http
+                .logout()
+                .disable();	// The logout procedure is already handled by SAML filters.
     }
 
     /**
      * Sets a custom authentication provider.
-     * 
-     * @param auth SecurityBuilder used to create an AuthenticationManager.
-     * @throws Exception
+     *
+     * @param   auth SecurityBuilder used to create an AuthenticationManager.
+     * @throws  Exception
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(samlAuthenticationProvider());
+        auth
+                .authenticationProvider(samlAuthenticationProvider());
     }
 
     @Override
