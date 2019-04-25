@@ -15,22 +15,22 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import com.hedstrom.hellosaml.stereotypes.CurrentUser;
 
 @Component
-public class ArgumentResolver implements HandlerMethodArgumentResolver {
+public class ArgumentResolver implements
+        HandlerMethodArgumentResolver {
 
     public boolean supportsParameter(MethodParameter methodParameter) {
         return methodParameter.getParameterAnnotation(CurrentUser.class) != null
                 && methodParameter.getParameterType().equals(User.class);
     }
 
-    public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer,
-            NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter methodParameter,
+                                  ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
+                                  WebDataBinderFactory binderFactory) throws Exception {
         if (this.supportsParameter(methodParameter)) {
-            Principal principal = (Principal) nativeWebRequest.getUserPrincipal();
+            Principal principal = (Principal) webRequest.getUserPrincipal();
             return (User) ((Authentication) principal).getPrincipal();
         } else {
             return WebArgumentResolver.UNRESOLVED;
         }
-
     }
-
 }
