@@ -16,32 +16,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements SAMLUserDetailsService {
 
+    // Logger
     private static final Logger LOG = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     public Object loadUserBySAML(SAMLCredential credential)
-    throws UsernameNotFoundException {
+            throws UsernameNotFoundException {
 
         String userID = credential.getNameID().getValue();
 
-        LOG.info(userID + " was logged in");
+        LOG.info(userID + " is logged in");
+
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-        //Add role/authority level
+        //add role/authority
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
         authorities.add(authority);
 
         //locate user in database
-        //returns 
-            // username
-            // password
-            // enabled: set to true if the user is enabled
-            // accountNonExpired: set to true if the account has not expired
-            // credentialsNonExpired: set to true if the credentials have not expired
-            // accountNonLocked: set to true if the account is not locked
-            // authorities: the authorities that should be granted to the caller if they presented the correct username and password and the user is enabled. Not null.
-        
-        return new User(userID, "<testPassword>", true, true, true, true, authorities);
+        //returns
+        // username
+        // password
+        // enabled: set to true if the user is enabled
+        // accountNonExpired: set to true if the account has not expired
+        // credentialsNonExpired: set to true if the credentials have not expired
+        // accountNonLocked: set to true if the account is not locked
+        // authorities: the authorities that should be granted to the caller if they presented the correct username and password and the user is enabled. Not null.
+        return new User(userID, "<abc123>", true, true, true, true, authorities);
     }
-
 
 }
