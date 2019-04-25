@@ -15,7 +15,7 @@ import com.hedstrom.hellosaml.core.ArgumentResolver;
 public class MvcConfig implements WebMvcConfigurer {
 
     @Autowired
-    ArgumentResolver argumentResolver;
+    ArgumentResolver currentUserHandlerMethodArgumentResolver;
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -25,13 +25,14 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         if (!registry.hasMappingForPattern("/static/**")) {
-            registry.addResourceHandler(("/static/**")).addResourceLocations("/static/");
+            registry.addResourceHandler("/static/**")
+                    .addResourceLocations("/static/");
         }
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(argumentResolver);
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
+        argumentResolvers.add(currentUserHandlerMethodArgumentResolver);
     }
 
 }
