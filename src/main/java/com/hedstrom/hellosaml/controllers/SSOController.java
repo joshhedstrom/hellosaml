@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/saml")
 public class SSOController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SSOController.class);
+    // Logger
+    private static final Logger LOG = LoggerFactory
+            .getLogger(SSOController.class);
 
     @Autowired
     private MetadataManager metadata;
@@ -28,27 +30,21 @@ public class SSOController {
     @RequestMapping(value = "/discovery", method = RequestMethod.GET)
     public String idpSelection(HttpServletRequest request, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth == null) {
-            LOG.debug("current auth instance from security context is null");
-        } else {
-            LOG.debug("current auth instance from security context is: " + this.getClass().getSimpleName());
-        }
-
+        if (auth == null)
+            LOG.debug("Current auth instance from security context is null");
+        else
+            LOG.debug("Current auth instance from security context is: "
+                    + this.getClass().getSimpleName());
         if (auth == null || (auth instanceof AnonymousAuthenticationToken)) {
             Set<String> idps = metadata.getIDPEntityNames();
-
-            for (String idp :idps) {
-                LOG.debug("configured identity provider for SSO: " + idp);
-            }
-
-             model.addAttribute(("idps"), idps);
-
-             return "pages/discovery";
+            for (String idp : idps)
+                LOG.info("Configured Identity Provider for SSO: " + idp);
+            model.addAttribute("idps", idps);
+            return "pages/discovery";
         } else {
-            LOG.warn("current user is already logged in");
+            LOG.warn("current user is already logged.");
             return "redirect:/landing";
         }
     }
-    
+
 }
