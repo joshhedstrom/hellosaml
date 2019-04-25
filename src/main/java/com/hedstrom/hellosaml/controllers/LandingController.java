@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class LandingController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LandingController.class);
+    // Logger
+    private static final Logger LOG = LoggerFactory
+            .getLogger(LandingController.class);
 
     @RequestMapping("/landing")
     public String landing(@CurrentUser User user, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth == null) {
-            LOG.debug("current auth instance from security context is null");
-        } else {
-            LOG.debug("current auth instance from security context is: " + this.getClass().getSimpleName());
-        }
-
-        model.addAttribute("username", user.getUsername());
-
+        if (auth == null)
+            LOG.debug("Current authentication instance from security context is null");
+        else
+            LOG.debug("Current authentication instance from security context: "
+                    + this.getClass().getSimpleName());
+        model.addAttribute("username", 	user.getUsername());
         return "pages/landing";
     }
+
 }
