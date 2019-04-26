@@ -32,13 +32,4 @@ hs_err_pid*
 file.log
 
 .factorypath
-.travis.yml
-_config.yml
-.vscode/
-CODE_OF_CONDUCT.md
-LICENSE
-
 samlKeystore.jks
-
-Dockerfile
-
