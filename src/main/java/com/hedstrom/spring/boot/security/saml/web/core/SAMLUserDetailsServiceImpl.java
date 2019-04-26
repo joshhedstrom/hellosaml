@@ -37,7 +37,7 @@ public class SAMLUserDetailsServiceImpl implements SAMLUserDetailsService {
         // credentialsNonExpired: set to true if the credentials have not expired
         // accountNonLocked: set to true if the account is not locked
         // authorities: the authorities that should be granted to the caller if they presented the correct username and password and the user is enabled. Not null.
-        return new User(userID, "<abc123>", true, true, true, true, authorities);
+        return new User(userID, "<testPassword>", true, true, true, true, authorities);
     }
 
 }
