@@ -1,34 +1,44 @@
-HELP.md
-/target/
-!.mvn/wrapper/maven-wrapper.jar
+# Ignore list
 
-### STS ###
-.apt_generated
+# Eclipse
 .classpath
-.factorypath
 .project
-.settings
-.springBeans
-.sts4-cache
+.settings/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# Intellij
+.idea/
 *.iml
-*.ipr
+*.iws
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-/build/
+# Mac
+.DS_Store
 
-### VS Code ###
-.vscode/
+# Maven
+log/
+target/
+hs_err_pid*
 
-src/main/resources/saml/samlKeystore.jks
+# Misc
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
 
 file.log
+
+.factorypath
+.travis.yml
+_config.yml
+.vscode/
+CODE_OF_CONDUCT.md
+LICENSE
+
+samlKeystore.jks
+
+Dockerfile
 

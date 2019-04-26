@@ -1,16 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html
   lang="en"
   xmlns:th="http://www.thymeleaf.org"
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
-  <body>
-    <h3>This is the helloSAML index page</h3>
-  </body>
-
-  <small>
-    <a th:href="@{saml/login}">
-      Start Login Process
-    </a>
-  </small>
+<body>
+  <section layout:fragment="content">
+    <h6>Login below</h6>
+    <small>
+      <a th:href="@{saml/login}">start login process</a>
+    </small>
+  </section>
+<body>
 </html>

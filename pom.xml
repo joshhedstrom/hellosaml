@@ -1,20 +1,24 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.hedstrom.hellosaml</groupId>
-	<artifactId>hellosaml</artifactId>
-	<name>hellosaml</name>
-	<version>0.0.1-SNAPSHOT</version>
-	<description>saml demo</description>
+
+	<groupId>com.hedstrom.spring</groupId>
+	<artifactId>hellosaml2</artifactId>
+	<version>0.0.1.SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<!-- Project description -->
+	<name>hellosaml2d</name>
+	<description>a saml hello world</description>
 	<properties>
 		<java.version>1.8</java.version>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.report.outputEncoding>UTF-8</project.report.outputEncoding>
-		<start-class>com.hedstrom.hellosaml.Application</start-class>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<start-class>com.hedstrom.spring.boot.security.saml.web.Application</start-class>
 	</properties>
 
+	<!-- Inherit defaults from Spring Boot -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -35,14 +39,14 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-log4j2</artifactId>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+		</dependency>		
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -55,8 +59,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>nz.net.ultraq.thymeleaf</groupId>
-			<artifactId>thymeleaf-layout-dialect</artifactId>
+  			<groupId>nz.net.ultraq.thymeleaf</groupId>
+  			<artifactId>thymeleaf-layout-dialect</artifactId>
 		</dependency>
 
 		<dependency>
@@ -69,13 +73,13 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
-		</dependency>
+        </dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
-		</dependency>
+    	</dependency>
 
 		<dependency>
 			<groupId>org.springframework.security.extensions</groupId>
@@ -83,7 +87,7 @@
 			<version>1.0.3.RELEASE</version>
 		</dependency>
 	</dependencies>
-
+		
 	<build>
 		<plugins>
 			<plugin>
@@ -111,4 +115,5 @@
 			</plugin>
 		</plugins>
 	</build>
+
 </project>
