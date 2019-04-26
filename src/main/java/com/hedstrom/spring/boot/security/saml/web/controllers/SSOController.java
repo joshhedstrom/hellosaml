@@ -20,31 +20,33 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/saml")
 public class SSOController {
 
-	// Logger
-	private static final Logger LOG = LoggerFactory
-			.getLogger(SSOController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SSOController.class);
 
-	@Autowired
-	private MetadataManager metadata;
+    @Autowired
+    private MetadataManager metadata;
 
-	@RequestMapping(value = "/discovery", method = RequestMethod.GET)
-	public String idpSelection(HttpServletRequest request, Model model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null)
-			LOG.debug("Current authentication instance from security context is null");
-		else
-			LOG.debug("Current authentication instance from security context: "
-					+ this.getClass().getSimpleName());
-		if (auth == null || (auth instanceof AnonymousAuthenticationToken)) {
-			Set<String> idps = metadata.getIDPEntityNames();
-			for (String idp : idps)
-				LOG.info("Configured Identity Provider for SSO: " + idp);
-			model.addAttribute("idps", idps);
-			return "pages/discovery";
-		} else {
-			LOG.warn("The current user is already logged.");
-			return "redirect:/landing";
-		}
-	}
+    @RequestMapping(value = "/discovery", method = RequestMethod.GET)
+    public String idpSelection(HttpServletRequest request, Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null) {
+            LOG.debug("current auth instance from security context is null");
+        } else {
+            LOG.debug("current auth instance from security context is: " + this.getClass().getSimpleName());
+        }
+
+        if (auth == null || (auth instanceof AnonymousAuthenticationToken)) {
+            Set<String> idps = metadata.getIDPEntityNames();
+            for (String idp : idps)
+                LOG.info("configured IDP for SSO is: " + idp);
+            model.addAttribute("idps", idps);
+            return "pages/discovery";
+        } else {
+            LOG.warn("current user is already logged.");
+            return "redirect:/landing";
+        }
+
+    }
 
 }
