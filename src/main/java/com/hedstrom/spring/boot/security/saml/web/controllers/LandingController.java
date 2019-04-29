@@ -13,21 +13,23 @@ import com.hedstrom.spring.boot.security.saml.web.stereotypes.CurrentUser;
 
 @Controller
 public class LandingController {
-	
-	// Logger
-	private static final Logger LOG = LoggerFactory
-			.getLogger(LandingController.class);
 
-	@RequestMapping("/landing")
-	public String landing(@CurrentUser User user, Model model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null)
-			LOG.debug("Current authentication instance from security context is null");
-		else
-			LOG.debug("Current authentication instance from security context: "
-					+ this.getClass().getSimpleName());
-		model.addAttribute("username", 	user.getUsername());
-		return "pages/landing";
-	}
+    private static final Logger LOG = LoggerFactory.getLogger(LandingController.class);
+
+    @RequestMapping("/landing")
+    public String landing(@CurrentUser User user, Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth == null) {
+            LOG.debug("current auth instance from security context is null");
+        } else {
+            LOG.debug("current auth instance from security context is: " + this.getClass().getSimpleName());
+        }
+
+        model.addAttribute("username", user.getUsername());
+
+        return "pages/landing";
+    }
 
 }

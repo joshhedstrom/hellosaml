@@ -1,19 +1,3 @@
-/*
- * Copyright 2019 Vincenzo De Notaris
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.hedstrom.spring.boot.security.saml.web.core;
 
 import com.hedstrom.spring.boot.security.saml.web.CommonTestSupport;
@@ -43,7 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes= TestConfig.class)
+@ContextConfiguration(classes = TestConfig.class)
 public class CurrentUserHandlerMethodArgumentResolverTest extends CommonTestSupport {
 
     @Autowired
@@ -58,11 +42,11 @@ public class CurrentUserHandlerMethodArgumentResolverTest extends CommonTestSupp
     @Before
     public void init() throws NoSuchMethodException {
         validParam = new MethodParameter(
-        		MethodSamples.class.getMethod("validUser", User.class), 0);
+                MethodSamples.class.getMethod("validUser", User.class), 0);
         notAnnotatedParam = new MethodParameter(
-        		MethodSamples.class.getMethod("notAnnotatedUser", User.class), 0);
+                MethodSamples.class.getMethod("notAnnotatedUser", User.class), 0);
         wrongTypeParam = new MethodParameter(
-        		MethodSamples.class.getMethod("wrongTypeUser", Object.class), 0);
+                MethodSamples.class.getMethod("wrongTypeUser", Object.class), 0);
     }
 
     @Test
@@ -84,20 +68,23 @@ public class CurrentUserHandlerMethodArgumentResolverTest extends CommonTestSupp
 
         // when/then
         assertEquals(stubUser,
-                resolver.resolveArgument(validParam, mavContainer, webRequest,binderFactory));
+                resolver.resolveArgument(validParam, mavContainer, webRequest, binderFactory));
         assertEquals(WebArgumentResolver.UNRESOLVED,
-                resolver.resolveArgument(notAnnotatedParam, mavContainer, webRequest,binderFactory));
+                resolver.resolveArgument(notAnnotatedParam, mavContainer, webRequest, binderFactory));
         assertEquals(WebArgumentResolver.UNRESOLVED,
-                resolver.resolveArgument(wrongTypeParam, mavContainer, webRequest,binderFactory));
+                resolver.resolveArgument(wrongTypeParam, mavContainer, webRequest, binderFactory));
     }
 
     @SuppressWarnings("unused")
     private static final class MethodSamples {
 
-        public void validUser(@CurrentUser User user) {}
+        public void validUser(@CurrentUser User user) {
+        }
 
-        public void notAnnotatedUser(User user) {}
+        public void notAnnotatedUser(User user) {
+        }
 
-        public void wrongTypeUser(@CurrentUser Object user) {}
+        public void wrongTypeUser(@CurrentUser Object user) {
+        }
     }
 }
