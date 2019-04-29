@@ -16,22 +16,21 @@ import com.hedstrom.spring.boot.security.saml.web.stereotypes.CurrentUser;
 
 @Component
 public class CurrentUserHandlerMethodArgumentResolver implements
-        HandlerMethodArgumentResolver {
+		HandlerMethodArgumentResolver {
 
-    public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.getParameterAnnotation(CurrentUser.class) != null
-                && methodParameter.getParameterType().equals(User.class);
-    }
+	public boolean supportsParameter(MethodParameter methodParameter) {
+		return methodParameter.getParameterAnnotation(CurrentUser.class) != null
+				&& methodParameter.getParameterType().equals(User.class);
+	}
 
-    public Object resolveArgument(MethodParameter methodParameter,
-                                  ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest,
-                                  WebDataBinderFactory binderFactory) throws Exception {
-        if (this.supportsParameter(methodParameter)) {
-            Principal principal = (Principal) webRequest.getUserPrincipal();
-            return (User) ((Authentication) principal).getPrincipal();
-        } else {
-            return WebArgumentResolver.UNRESOLVED;
-        }
-    }
+	public Object resolveArgument(MethodParameter methodParameter,
+			ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
+			WebDataBinderFactory binderFactory) throws Exception {
+		if (this.supportsParameter(methodParameter)) {
+			Principal principal = (Principal) webRequest.getUserPrincipal();
+			return (User) ((Authentication) principal).getPrincipal();
+		} else {
+			return WebArgumentResolver.UNRESOLVED;
+		}
+	}
 }
