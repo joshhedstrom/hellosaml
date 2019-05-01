@@ -1,21 +1,22 @@
-<!doctype html>
+<!DOCTYPE html>
 <html
   lang="en"
   xmlns:th="http://www.thymeleaf.org"
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+  layout:decorate="~{layout}"
 >
-<body>
+  <body>
     <section layout:fragment="content">
-      <div class="alert alert-success" role="alert">
-          <h3>login success</h3>
+      <div class="title" role="alert">
+        <h3>Login Success!</h3>
       </div>
       <p></p>
-      <p>You are logged as <span th:text="${username}">null</span>.</p>
+      <p>You are logged in as <span th:text="${username}">null</span>.</p>
       <small class="d-block text-right mt-3" id="sso-btn">
-        <a th:href="@{/saml/logout}"> Global logout </a>
-        <a th:href="@{/saml/logout?local=true}">Local logout</a>
+        <a th:href="@{/saml/logout}"> Global Logout </a>
+        <a th:href="@{/saml/logout?local=true}">Local Logout</a>
       </small>
     </section>
-</body>
+  </body>
 </html>

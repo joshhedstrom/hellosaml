@@ -1,0 +1,34 @@
+body {
+  background-color: saddlebrown;
+}
+
+section,
+header {
+  background-color: wheat;
+  margin: 36px;
+  padding: 24px;
+}
+
+button,
+a {
+  margin: 2px;
+  padding: 4px;
+  font-size: 16px;
+  color: black;
+  border: black 2px solid;
+  border-radius: 5px;
+  opacity: 0.8;
+}
+
+a {
+  text-decoration: underline;
+}
+
+button:hover,
+a:hover {
+  opacity: 1;
+}
+
+.title {
+  font-size: 24px;
+}
