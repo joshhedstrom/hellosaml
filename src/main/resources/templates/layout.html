@@ -1,17 +1,25 @@
-<!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>helloSAML2</title>
-</head>
-<body >
-  <div role="main">
-    <header role="header" >
-        <h1 >helloSAML2</h1>
-    </header>
-    <section role="content" layout:fragment="content">
-    </section>
-  </div>
-</body>
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>helloSAML2</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+  </head>
+  <body>
+    <div role="main">
+      <header role="header">
+        <h1>helloSAML</h1>
+        <h4>a hello world SAML application</h4>
+      </header>
+      <section role="content" layout:fragment="content"></section>
+    </div>
+  </body>
 </html>

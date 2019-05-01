@@ -3,12 +3,13 @@
   lang="en"
   xmlns:th="http://www.thymeleaf.org"
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}"
 >
 <body>
   <section layout:fragment="content">
-    <h6>Login below</h6>
+    <h3 class="title">Login below</h3>
     <small>
-      <a th:href="@{saml/login}">start login process</a>
+      <a th:href="@{saml/login}">Start Login Process</a>
     </small>
   </section>
 <body>
