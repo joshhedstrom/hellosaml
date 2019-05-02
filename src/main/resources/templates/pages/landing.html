@@ -11,8 +11,19 @@
       <div class="title" role="alert">
         <h3>Login Success!</h3>
       </div>
-      <p></p>
       <p>You are logged in as <span th:text="${username}">null</span>.</p>
+      <br />
+      <section>
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube-nocookie.com/embed/ZlbXzSJ_MP0"
+          frameborder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </section>
+      <br />
       <small class="d-block text-right mt-3" id="sso-btn">
         <a th:href="@{/saml/logout}"> Global Logout </a>
         <a th:href="@{/saml/logout?local=true}">Local Logout</a>
