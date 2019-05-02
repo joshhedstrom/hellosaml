@@ -33,13 +33,13 @@ public class SSOController {
         if (auth == null) {
             LOG.debug("current auth instance from security context is null");
         } else {
-            LOG.debug("current auth instance from security context is: " + this.getClass().getSimpleName());
+            LOG.debug("current auth instance from security context is " + this.getClass().getSimpleName());
         }
 
         if (auth == null || (auth instanceof AnonymousAuthenticationToken)) {
             Set<String> idps = metadata.getIDPEntityNames();
             for (String idp : idps)
-                LOG.info("configured IDP for SSO is: " + idp);
+                LOG.info("configured IDP for SSO is " + idp);
             model.addAttribute("idps", idps);
             return "pages/discovery";
         } else {
