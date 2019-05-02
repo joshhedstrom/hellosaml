@@ -24,7 +24,7 @@ public class LandingController {
         if (auth == null) {
             LOG.debug("current auth instance from security context is null");
         } else {
-            LOG.debug("current auth instance from security context is: " + this.getClass().getSimpleName());
+            LOG.debug("current auth instance from security context is " + this.getClass().getSimpleName());
         }
 
         model.addAttribute("username", user.getUsername());
